@@ -12,13 +12,13 @@ import cube
 def main():
     pygame.init()
 
-    testimg = pygame.image.load('Perfect25px.png')
-    snekopen = pygame.image.load('OpenMouth25px.png')
-    snekclos = pygame.image.load('ClosedMouth25px.png')
-    snekbadi = pygame.image.load('Body25px.png')
-    snektel = pygame.image.load('Tail25px.png')
+    food = pygame.image.load('Perfect50px.png')
+    snekopen = pygame.image.load('OpenMouth50px.png')
+    snekclos = pygame.image.load('ClosedMouth50px.png')
+    snekbadi = pygame.image.load('Body50px.png')
+    snektel = pygame.image.load('TailLeft50px.png')
 
-    snakex = 350
+    snakex = 300
     snakey = 100
 
     dx = 50
@@ -37,7 +37,6 @@ def main():
 
     # Class Food constructor
     # food = Food()
-
 
     while gaming:
         board.displayboard()
@@ -58,15 +57,19 @@ def main():
         # Boundary check snake -> Edges and self
         # Check if snake ate food -> Increase snake length, move food coord
         # Update board
-
-
-        cube.put(board.screen, 600, 100, testimg)
+        if snakex <= 450:
+            cube.put(board.screen, 600, 100, food)
         cube.put(board.screen, snakex, 100, snektel)
         cube.put(board.screen, snakex + 50, 100, snekbadi)
-        cube.put(board.screen, snakex + 50 + 40, 95, snekopen)
+        if 500 > snakex > 350:
+            cube.put(board.screen, snakex + 50 + 50, 75, snekopen)
+        else:
+            cube.put(board.screen, snakex + 50 + 50, 85, snekclos)
+
+        if snakex > 800:
+            snakex = 300
 
         pygame.display.update()
-
 
     # Game Over
     pygame.quit()
