@@ -17,7 +17,6 @@ def displayboard():
     #for event in pygame.event.get():
        # if event.type == pygame.QUIT: sys.exit()
 
-
     # make screen background white
     screen.fill(pygame.Color(255, 255, 255, 255))
 

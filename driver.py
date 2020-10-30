@@ -1,31 +1,25 @@
-import time
-
 import pygame
 # from board import Board
 # from snake import Snake
 # from food import Food
 from highscore import HighScore
 import board
-import cube
+import snake
+import food
+
+# 32 x 32 playing field
+BOARD_WIDTH = 640
+BOARD_LENGTH = 640
+GRID_SIZE = 20
 
 
 def main():
     pygame.init()
 
-    food = pygame.image.load('Perfect50px.png')
-    snekopen = pygame.image.load('OpenMouth50px.png')
-    snekclos = pygame.image.load('ClosedMouth50px.png')
-    snekbadi = pygame.image.load('Body50px.png')
-    snektel = pygame.image.load('TailLeft50px.png')
-
-    snakex = 300
-    snakey = 100
-
-    dx = 50
-    dy = 10;
-
+    clock = pygame.time.Clock()
     gaming = True
-
+    s = snake.Snake()
+    f = food.Food()
     # High Score constructor
     score = HighScore()
 
@@ -39,35 +33,31 @@ def main():
     # food = Food()
 
     while gaming:
-        board.displayboard()
-        # Handle Events
+        clock.tick(10)
         for event in pygame.event.get():
-
             # Quit Game
             if event.type == pygame.QUIT:
                 gaming = False
+            s.handle_keys(event)
 
-            if event.type == pygame.KEYDOWN:
-                print(event)
-                if event.key == pygame.K_RIGHT:
-                    snakex += dx
-                # case/switch for up,down,left,right
-                # add appropriate offset to snake coords (head)
+        board.displayboard()
+        s.move()
+        print("Head")
+        print(s.getheadpos())
+        print("Food")
+        print(f.position)
+        if s.getheadpos() == f.position:
+            s.length += 1
+            f.randpos()
+        # Handle Events
 
+        # case/switch for up,down,left,right
+        # add appropriate offset to snake coords (head)
+        s.draw(board.screen)
+        f.draw(board.screen)
         # Boundary check snake -> Edges and self
         # Check if snake ate food -> Increase snake length, move food coord
         # Update board
-        if snakex <= 450:
-            cube.put(board.screen, 600, 100, food)
-        cube.put(board.screen, snakex, 100, snektel)
-        cube.put(board.screen, snakex + 50, 100, snekbadi)
-        if 500 > snakex > 350:
-            cube.put(board.screen, snakex + 50 + 50, 75, snekopen)
-        else:
-            cube.put(board.screen, snakex + 50 + 50, 85, snekclos)
-
-        if snakex > 800:
-            snakex = 300
 
         pygame.display.update()
 
