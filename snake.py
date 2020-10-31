@@ -4,8 +4,8 @@ from driver import GRID_SIZE
 from driver import BOARD_LENGTH
 from driver import BOARD_WIDTH
 
-UP = (0, -1)
-DOWN = (0, 1)
+UP = (0, 1)
+DOWN = (0, -1)
 LEFT = (-1, 0)
 RIGHT = (1, 0)
 
@@ -33,7 +33,8 @@ class Snake:
         return self.positions[len(self.positions) - 1 - offset]
 
     def turn(self, dir):
-        if self.length > 2 and (dir[0] * -1, dir[1] * -1) == self.direction:
+        if self.length > 2 and ((dir[0], dir[1]) == self.direction or 
+                                (dir[0] * -1, dir[1] * -1) == self.direction):
             return  # if the input direction is to go back when length is too long, ignore it
         else:
             self.direction = dir
@@ -61,7 +62,9 @@ class Snake:
                 elif self.direction == RIGHT:
                     cube.put(board, p[0], p[1], self.closedright)
             elif p == self.gettail():
-                orientation = tuple(map(lambda i, j, k: (i - j) / k, self.gettail(1), p, (20, 20)))
+                orientation = tuple(map(lambda i, j, k: (i - j) / k,
+                                    self.gettail(1), p, (GRID_SIZE, GRID_SIZE))
+                                    )
                 if orientation == UP:
                     cube.put(board, p[0], p[1], self.taildown)
                 elif orientation == DOWN:
