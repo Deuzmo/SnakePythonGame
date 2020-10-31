@@ -69,7 +69,7 @@ class Snake:
                         cube.put(board, p[0], p[1], self.closedup)
                 elif self.direction == DOWN:
                     if front == foodpos:
-                        cube.put(board, p[0], p[1] + GRID_SIZE, self.opendown)
+                        cube.put(board, p[0], p[1], self.opendown)
                     else:
                         cube.put(board, p[0], p[1], self.closeddown)
                 elif self.direction == LEFT:
