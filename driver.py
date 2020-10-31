@@ -53,7 +53,7 @@ def main():
 
         # case/switch for up,down,left,right
         # add appropriate offset to snake coords (head)
-        s.draw(board.screen)
+        s.draw(board.screen, f)
         f.draw(board.screen)
         # Boundary check snake -> Edges and self
         # Check if snake ate food -> Increase snake length, move food coord

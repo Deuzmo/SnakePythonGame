@@ -21,10 +21,10 @@ def displayboard():
     screen.fill(pygame.Color(255, 255, 255, 255))
 
     # draw border
-    startX = 310
-    startY = 30
-    endX = 950
-    endY = 670
+    startX = 320
+    startY = 40
+    endX = 960
+    endY = 680
     length = 660
     thick = 20
     pygame.draw.rect(screen, (0, 0, 0, 0), [startX, startY, length, thick])
@@ -33,8 +33,8 @@ def displayboard():
     pygame.draw.rect(screen, (0, 0, 0, 0), [endX, startY, thick, length])
 
     # draw rectangles
-    hor = 350  # starting horizontal pos of rectangle
-    ver = 70  # starting vertical pos of rectangle
+    hor = 360  # starting horizontal pos of rectangle
+    ver = 80  # starting vertical pos of rectangle
     sq_width = 100  # rectangle width
     sq_height = 100  # rectangle height
     square_size = (sq_width, sq_height)  # var combining both rectangle width and height
@@ -48,7 +48,7 @@ def displayboard():
             # increments hor position
             hor = hor + 120
         # resets hor position for each row
-        hor = 350
+        hor = 360
         # increments ver position
         ver = ver + 120
 
