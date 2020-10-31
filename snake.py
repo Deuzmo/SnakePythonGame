@@ -15,16 +15,19 @@ class Snake:
         self.length = 2
         self.positions = [((BOARD_LENGTH / 2), (BOARD_WIDTH / 2))]
         self.direction = RIGHT
-        # self.snekopen = pygame.image.load('OpenMouth50px.png')
-        self.closedup = pygame.image.load('ClosedMouthUp50px.png')
-        self.closeddown = pygame.image.load('ClosedMouthDown50px.png')
-        self.closedleft = pygame.image.load('ClosedMouthLeft50px.png')
-        self.closedright = pygame.image.load('ClosedMouthRight50px.png')
-        self.snekbadi = pygame.image.load('Body50px.png')
-        self.tailup = pygame.image.load('TailUp50px.png')
-        self.taildown = pygame.image.load('TailDown50px.png')
-        self.tailleft = pygame.image.load('TailLeft50px.png')
-        self.tailright = pygame.image.load('TailRight50px.png')
+        self.openup = pygame.image.load('OpenMouthUp20px.png')
+        self.opendown = pygame.image.load('OpenMouthDown20px.png')
+        self.openleft = pygame.image.load('OpenMouthLeft20px.png')
+        self.openright = pygame.image.load('OpenMouthRight20px.png')
+        self.closedup = pygame.image.load('ClosedMouthUp20px.png')
+        self.closeddown = pygame.image.load('ClosedMouthDown20px.png')
+        self.closedleft = pygame.image.load('ClosedMouthLeft20px.png')
+        self.closedright = pygame.image.load('ClosedMouthRight20px.png')
+        self.snekbadi = pygame.image.load('Body20px.png')
+        self.tailup = pygame.image.load('TailUp20px.png')
+        self.taildown = pygame.image.load('TailDown20px.png')
+        self.tailleft = pygame.image.load('TailLeft20px.png')
+        self.tailright = pygame.image.load('TailRight20px.png')
 
     def getheadpos(self):
         return self.positions[0]
@@ -50,17 +53,35 @@ class Snake:
             if self.length < len(self.positions):
                 self.positions.pop()
 
-    def draw(self, board):
+    def draw(self, board, food):
+        # this first 3 lines would be used to properly render the head according to the food position.
+        # stolen from the move function, teehee
+        headpos = self.getheadpos()
+        x, y = self.direction
+        front = (headpos[0] + x * GRID_SIZE, headpos[1] + y * GRID_SIZE)
+        foodpos = food.position
         for p in self.positions:
             if p == self.getheadpos():
                 if self.direction == UP:
-                    cube.put(board, p[0], p[1], self.closedup)
+                    if front == foodpos:
+                        cube.put(board, p[0]- 10, p[1] + GRID_SIZE, self.openup)
+                    else:
+                        cube.put(board, p[0], p[1], self.closedup)
                 elif self.direction == DOWN:
-                    cube.put(board, p[0], p[1], self.closeddown)
+                    if front == foodpos:
+                        cube.put(board, p[0], p[1] + GRID_SIZE, self.opendown)
+                    else:
+                        cube.put(board, p[0], p[1], self.closeddown)
                 elif self.direction == LEFT:
-                    cube.put(board, p[0], p[1], self.closedleft)
+                    if front == foodpos:
+                        cube.put(board, p[0] - GRID_SIZE, p[1] + 10, self.openleft)
+                    else:
+                        cube.put(board, p[0], p[1], self.closedleft)
                 elif self.direction == RIGHT:
-                    cube.put(board, p[0], p[1], self.closedright)
+                    if front == foodpos:
+                        cube.put(board, p[0], p[1] + 10, self.openright)
+                    else:
+                        cube.put(board, p[0], p[1], self.closedright)
             elif p == self.gettail():
                 orientation = tuple(map(lambda i, j, k: (i - j) / k,
                                     self.gettail(1), p, (GRID_SIZE, GRID_SIZE))
