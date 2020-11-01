@@ -63,22 +63,22 @@ class Snake:
         for p in self.positions:
             if p == self.getheadpos():
                 if self.direction == UP:
-                    if front == foodpos:
+                    if front == foodpos or p == food.lastpos:
                         cube.put(board, p[0]- 10, p[1] + GRID_SIZE, self.openup)
                     else:
                         cube.put(board, p[0], p[1], self.closedup)
                 elif self.direction == DOWN:
-                    if front == foodpos:
+                    if front == foodpos or p == food.lastpos:
                         cube.put(board, p[0], p[1], self.opendown)
                     else:
                         cube.put(board, p[0], p[1], self.closeddown)
                 elif self.direction == LEFT:
-                    if front == foodpos:
+                    if front == foodpos or p == food.lastpos:
                         cube.put(board, p[0] - GRID_SIZE, p[1] + 10, self.openleft)
                     else:
                         cube.put(board, p[0], p[1], self.closedleft)
                 elif self.direction == RIGHT:
-                    if front == foodpos:
+                    if front == foodpos or p == food.lastpos:
                         cube.put(board, p[0], p[1] + 10, self.openright)
                     else:
                         cube.put(board, p[0], p[1], self.closedright)
