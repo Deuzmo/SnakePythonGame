@@ -36,15 +36,21 @@ def main():
 
         board.displayboard()
         s.move()
-        print("Head")
-        print(s.getheadpos())
-        print("Food")
-        print(f.position)
+
+        # testing
+        # print("Head")
+        # print(s.getheadpos())
+        # print("Food")
+        # print(f.position)
+        # testing
+
         if s.getheadpos() == f.position:
             s.length += 1
             curr_score += 1
-            # if curr_score > score.score : set new high score on screen
             f.randpos()
+            if curr_score > score.score: 
+                # set new high score on screen
+                board.update_score(curr_score)
         # Handle Events
 
         # case/switch for up,down,left,right
