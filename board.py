@@ -1,5 +1,6 @@
 import pygame
 import sys
+import score
 
 pygame.init()
 
@@ -8,7 +9,13 @@ width = 1280
 height = 720
 size = width, height
 screen = pygame.display.set_mode(size)
+score_sec = score.Score()
 
+
+# Updates Game High Score
+def update_score(new_score):
+    score_sec.update(new_score)
+    screen.blit(score_sec.text, (320,0))
 
 
 
@@ -19,6 +26,8 @@ def displayboard():
 
     # make screen background white
     screen.fill(pygame.Color(255, 255, 255, 255))
+
+    screen.blit(score_sec.text, (320,0))
 
     # draw border
     startX = 320
