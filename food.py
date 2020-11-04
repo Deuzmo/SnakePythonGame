@@ -7,7 +7,7 @@ class Food:
     def __init__(self):
         self.position = (0, 0)
         self.lastpos = (0, 0)
-        self.food = pygame.image.load('Apple20px.png')
+        self.food = pygame.image.load('img/Apple20px.png')
         self.randpos()
 
     def randpos(self):

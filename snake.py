@@ -15,19 +15,19 @@ class Snake:
         self.length = 2
         self.positions = [((BOARD_LENGTH / 2), (BOARD_WIDTH / 2))]
         self.direction = RIGHT
-        self.openup = pygame.image.load('OpenMouthUp20px.png')
-        self.opendown = pygame.image.load('OpenMouthDown20px.png')
-        self.openleft = pygame.image.load('OpenMouthLeft20px.png')
-        self.openright = pygame.image.load('OpenMouthRight20px.png')
-        self.closedup = pygame.image.load('ClosedMouthUp20px.png')
-        self.closeddown = pygame.image.load('ClosedMouthDown20px.png')
-        self.closedleft = pygame.image.load('ClosedMouthLeft20px.png')
-        self.closedright = pygame.image.load('ClosedMouthRight20px.png')
-        self.snekbadi = pygame.image.load('Body20px.png')
-        self.tailup = pygame.image.load('TailUp20px.png')
-        self.taildown = pygame.image.load('TailDown20px.png')
-        self.tailleft = pygame.image.load('TailLeft20px.png')
-        self.tailright = pygame.image.load('TailRight20px.png')
+        self.openup = pygame.image.load('img/OpenMouthUp20px.png')
+        self.opendown = pygame.image.load('img/OpenMouthDown20px.png')
+        self.openleft = pygame.image.load('img/OpenMouthLeft20px.png')
+        self.openright = pygame.image.load('img/OpenMouthRight20px.png')
+        self.closedup = pygame.image.load('img/ClosedMouthUp20px.png')
+        self.closeddown = pygame.image.load('img/ClosedMouthDown20px.png')
+        self.closedleft = pygame.image.load('img/ClosedMouthLeft20px.png')
+        self.closedright = pygame.image.load('img/ClosedMouthRight20px.png')
+        self.snekbadi = pygame.image.load('img/Body20px.png')
+        self.tailup = pygame.image.load('img/TailUp20px.png')
+        self.taildown = pygame.image.load('img/TailDown20px.png')
+        self.tailleft = pygame.image.load('img/TailLeft20px.png')
+        self.tailright = pygame.image.load('img/TailRight20px.png')
 
     def getheadpos(self):
         return self.positions[0]

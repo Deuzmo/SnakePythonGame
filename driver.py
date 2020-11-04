@@ -1,7 +1,4 @@
 import pygame
-# from board import Board
-# from snake import Snake
-# from food import Food
 from highscore import HighScore
 import board
 import snake
@@ -18,19 +15,16 @@ def main():
 
     clock = pygame.time.Clock()
     gaming = True
+
+    # Class Snake constructor
     s = snake.Snake()
+
+    # Class Food constructor
     f = food.Food()
     # High Score constructor
     score = HighScore()
 
-    # Class Board constructor
-    # board = Board()
-
-    # Class Snake constructor
-    # snake = Snake()
-
-    # Class Food constructor
-    # food = Food()
+    curr_score = 0
 
     while gaming:
         clock.tick(10)
@@ -48,6 +42,8 @@ def main():
         print(f.position)
         if s.getheadpos() == f.position:
             s.length += 1
+            curr_score += 1
+            # if curr_score > score.score : set new high score on screen
             f.randpos()
         # Handle Events
 
@@ -63,6 +59,11 @@ def main():
 
     # Game Over
     pygame.quit()
+
+    # Set score if needed
+    if curr_score > score.score:
+        score.score = curr_score
+        score.set_score()
     quit()
 
 
