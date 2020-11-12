@@ -1,5 +1,6 @@
 import pygame
 import cube
+import board
 from driver import GRID_SIZE
 from driver import BOARD_LENGTH
 from driver import BOARD_WIDTH
@@ -48,6 +49,11 @@ class Snake:
         new = (current[0] + x * GRID_SIZE, current[1] + y * GRID_SIZE)
         if len(self.positions) > 3 and new in self.positions[2:]:
             print("Oh no!")
+        elif (self.positions[0][0] < 320 #adds functionality that prevents snek from moving beyond boarder
+            or self.positions[0][0] > 960
+            or self.positions[0][1] < 40
+            or self.positions[0][1] > 680):
+            print("Speelsh!")
         else:
             self.positions.insert(0, new)
             if self.length < len(self.positions):
