@@ -35,33 +35,40 @@ def main():
             s.handle_keys(event)
 
         board.displayboard()
-        s.move()
 
-        # testing
-        # print("Head")
-        # print(s.getheadpos())
-        # print("Food")
-        # print(f.position)
-        # testing
+        # Return something to signify valid move
+        bad_move = s.move()
+        if bad_move:
+            board.game_over()
+            mouse = pygame.mouse.get_pos()
+            print(event)
+            print(mouse)
+        else:
+            # testing
+            # print("Head")
+            # print(s.getheadpos())
+            # print("Food")
+            # print(f.position)
+            # testing
 
-        if s.getheadpos() == f.position:
-            s.length += 1
-            curr_score += 1
-            f.randpos()
-            if curr_score > score.score: 
-                # set new high score on screen
-                board.update_score(curr_score)
-        # Handle Events
+            if s.getheadpos() == f.position:
+                s.length += 1
+                curr_score += 1
+                f.randpos()
+                if curr_score > score.score: 
+                    # set new high score on screen
+                    board.update_score(curr_score)
+            # Handle Events
 
-        # case/switch for up,down,left,right
-        # add appropriate offset to snake coords (head)
-        f.draw(board.screen)
-        s.draw(board.screen, f)
-        # Boundary check snake -> Edges and self
-        # Check if snake ate food -> Increase snake length, move food coord
-        # Update board
+            # case/switch for up,down,left,right
+            # add appropriate offset to snake coords (head)
+            f.draw(board.screen)
+            s.draw(board.screen, f)
+            # Boundary check snake -> Edges and self
+            # Check if snake ate food -> Increase snake length, move food coord
+            # Update board
 
-        pygame.display.update()
+            pygame.display.update()
 
     # Game Over
     pygame.quit()
