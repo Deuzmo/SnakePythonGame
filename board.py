@@ -30,7 +30,7 @@ def game_over():
     screen.blit(res, (565,320))
 
     # Draw buttons
-    pygame.draw.rect(screen, (255, 255, 255, 255), [565,360,150,30])
+    pygame.draw.rect(screen, (255, 255, 255, 255), [565,360,150,30]) # x, y, width(x), height(y)
     pygame.draw.rect(screen, (255, 255, 255, 255), [565,400,150,30])
 
     # Draw button text

@@ -54,7 +54,6 @@ class Snake:
             or self.positions[0][0] > 960
             or self.positions[0][1] < 40
             or self.positions[0][1] > 680):
-            print("Speelsh!")
             return True
         else:
             self.positions.insert(0, new)
