@@ -49,15 +49,17 @@ class Snake:
         new = (current[0] + x * GRID_SIZE, current[1] + y * GRID_SIZE)
         if len(self.positions) > 3 and new in self.positions[2:]:
             print("Oh no!")
+            return True
         elif (self.positions[0][0] < 320 #adds functionality that prevents snek from moving beyond boarder
             or self.positions[0][0] > 960
             or self.positions[0][1] < 40
             or self.positions[0][1] > 680):
-            print("Speelsh!")
+            return True
         else:
             self.positions.insert(0, new)
             if self.length < len(self.positions):
                 self.positions.pop()
+            return False
 
     def draw(self, board, food):
         # this first 3 lines would be used to properly render the head according to the food position.

@@ -17,6 +17,30 @@ def update_score(new_score):
     score_sec.update(new_score)
     screen.blit(score_sec.text, (320,0))
 
+# Displays Game Over view
+# TODO: Fix fitment of text
+def game_over():
+    # Black out screen
+    screen.fill(pygame.Color(255, 255, 255, 255))
+    pygame.draw.rect(screen, (10,10,10,10), [320,40,640,640])
+
+    # Draw game over
+    txt = pygame.font.SysFont('Comic Sans MS', 25)
+    res = txt.render('GAME OVER', False, (0,200,0))
+    screen.blit(res, (565,320))
+
+    # Draw buttons
+    pygame.draw.rect(screen, (255, 255, 255, 255), [565,360,150,30]) # x, y, width(x), height(y)
+    pygame.draw.rect(screen, (255, 255, 255, 255), [565,400,150,30])
+
+    # Draw button text
+    txt = pygame.font.SysFont('Comic Sans MS', 20)
+    res = txt.render('QUIT', False, (0,200,0))
+    screen.blit(res, (600,360))
+    res = txt.render('PLAY AGAIN', False, (0,200,0))
+    screen.blit(res, (575,400))
+
+    pygame.display.update()
 
 
 # keeps screen printed until game is quit

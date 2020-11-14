@@ -9,6 +9,12 @@ BOARD_WIDTH = 640
 BOARD_LENGTH = 640
 GRID_SIZE = 20
 
+def set_score(curr_score, score):
+    # Set score if needed
+    if curr_score > score.score:
+        score.score = curr_score
+        score.set_score()
+
 
 def main():
     pygame.init()
@@ -35,41 +41,46 @@ def main():
             s.handle_keys(event)
 
         board.displayboard()
-        s.move()
 
-        # testing
-        # print("Head")
-        # print(s.getheadpos())
-        # print("Food")
-        # print(f.position)
-        # testing
+        # Return something to signify valid move
+        bad_move = s.move()
+        if bad_move:
+            board.game_over()
 
-        if s.getheadpos() == f.position:
-            s.length += 1
-            curr_score += 1
-            f.randpos()
-            if curr_score > score.score: 
-                # set new high score on screen
-                board.update_score(curr_score)
-        # Handle Events
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse = pygame.mouse.get_pos()
 
-        # case/switch for up,down,left,right
-        # add appropriate offset to snake coords (head)
-        f.draw(board.screen)
-        s.draw(board.screen, f)
-        # Boundary check snake -> Edges and self
-        # Check if snake ate food -> Increase snake length, move food coord
-        # Update board
+                # QUIT
+                if mouse[0] >= 565 and mouse[0] <= 715 and mouse[1] >= 360 and mouse[1] <= 390:
+                    set_score(curr_score, score)
+                    pygame.quit()
+                    quit()
+                # PLAY AGAIN
+                if mouse[0] >= 565 and mouse[0] <= 715 and mouse[1] >= 400 and mouse[1] <= 430:
+                    main()
+        else:
+            if s.getheadpos() == f.position:
+                s.length += 1
+                curr_score += 1
+                f.randpos()
+                if curr_score > score.score: 
+                    # set new high score on screen
+                    board.update_score(curr_score)
+            # Handle Events
 
-        pygame.display.update()
+            # case/switch for up,down,left,right
+            # add appropriate offset to snake coords (head)
+            f.draw(board.screen)
+            s.draw(board.screen, f)
+            # Boundary check snake -> Edges and self
+            # Check if snake ate food -> Increase snake length, move food coord
+            # Update board
+
+            pygame.display.update()
 
     # Game Over
+    set_score(curr_score, score)
     pygame.quit()
-
-    # Set score if needed
-    if curr_score > score.score:
-        score.score = curr_score
-        score.set_score()
     quit()
 
 
