@@ -3,6 +3,7 @@ from highscore import HighScore
 import board
 import snake
 import food
+import score_curr
 
 # 32 x 32 playing field
 BOARD_WIDTH = 640
@@ -30,6 +31,10 @@ def main():
     # High Score constructor
     score = HighScore()
 
+    # Score constructor
+    scoreObj = score_curr.Score_Curr()
+
+
     curr_score = 0
 
     while gaming:
@@ -40,7 +45,7 @@ def main():
                 gaming = False
             s.handle_keys(event)
 
-        board.displayboard()
+        board.displayboard(scoreObj)
 
         # Return something to signify valid move
         bad_move = s.move()
@@ -63,18 +68,13 @@ def main():
                 s.length += 1
                 curr_score += 1
                 f.randpos()
+                scoreObj.update()
                 if curr_score > score.score: 
                     # set new high score on screen
                     board.update_score(curr_score)
-            # Handle Events
 
-            # case/switch for up,down,left,right
-            # add appropriate offset to snake coords (head)
             f.draw(board.screen)
             s.draw(board.screen, f)
-            # Boundary check snake -> Edges and self
-            # Check if snake ate food -> Increase snake length, move food coord
-            # Update board
 
             pygame.display.update()
 

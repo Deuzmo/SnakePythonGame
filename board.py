@@ -15,7 +15,12 @@ score_sec = score.Score()
 # Updates Game High Score
 def update_score(new_score):
     score_sec.update(new_score)
-    screen.blit(score_sec.text, (320,0))
+    screen.blit(score_sec.text, (735,0))
+
+# Updates current game score
+def update_curr_score(scoreObj):
+    scoreObj.update()
+    screen.blit(scoreObj.txt, (320, 0))
 
 # Displays Game Over view
 # TODO: Fix fitment of text
@@ -44,14 +49,18 @@ def game_over():
 
 
 # keeps screen printed until game is quit
-def displayboard():
+def displayboard(scoreObj):
     #for event in pygame.event.get():
        # if event.type == pygame.QUIT: sys.exit()
 
     # make screen background white
     screen.fill(pygame.Color(255, 255, 255, 255))
 
-    screen.blit(score_sec.text, (320,0))
+    # insert score counter
+    screen.blit(scoreObj.txt, (320, 0))
+
+    # high score
+    screen.blit(score_sec.text, (735,0))
 
     # draw border
     startX = 320
