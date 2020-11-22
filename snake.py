@@ -14,7 +14,7 @@ RIGHT = (1, 0)
 class Snake:
     def __init__(self):
         self.length = 2
-        self.positions = [((BOARD_LENGTH / 2), (BOARD_WIDTH / 2))]
+        self.positions = [((BOARD_LENGTH / 2 + GRID_SIZE), (BOARD_WIDTH / 2 + GRID_SIZE))]
         self.direction = RIGHT
         self.openup = pygame.image.load('img/OpenMouthUp20px.png')
         self.opendown = pygame.image.load('img/OpenMouthDown20px.png')
@@ -50,10 +50,10 @@ class Snake:
         if len(self.positions) > 3 and new in self.positions[2:]:
             print("Oh no!")
             return True
-        elif (self.positions[0][0] < 320 #adds functionality that prevents snek from moving beyond boarder
-            or self.positions[0][0] > 960
-            or self.positions[0][1] < 40
-            or self.positions[0][1] > 680):
+        elif (self.positions[0][0] <= 320 #adds functionality that prevents snek from moving beyond boarder
+            or self.positions[0][0] >= 960
+            or self.positions[0][1] <= 40
+            or self.positions[0][1] >= 680):
             return True
         else:
             self.positions.insert(0, new)

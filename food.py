@@ -13,7 +13,7 @@ class Food:
     def randpos(self):
         self.lastpos = self.position
         self.position = (random.randint(17, (46))*20
-                         , random.randint(21, (32))*20) # these ranges are based on the board coordinates.
+                         , random.randint(3, (32))*20) # these ranges are based on the board coordinates.
 
     def draw(self, board):
         cube.put(board, self.position[0], self.position[1], self.food)
