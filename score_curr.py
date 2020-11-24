@@ -1,5 +1,4 @@
 import pygame
-import highscore
 
 pygame.font.init()
 

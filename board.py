@@ -4,6 +4,7 @@ import score
 import snake
 import food
 import score_curr
+import high_score
 
 
 # set game screen size
@@ -11,15 +12,15 @@ size = FRAME_WIDTH, FRAME_HEIGHT
 screen = pygame.display.set_mode(size)
 
 #Initialize board objects
-score_sec = score.Score()
 snake_obj = snake.Snake()
 food_obj = food.Food(snake_obj)
 score_obj = score_curr.Score_Curr() # Normal score tracker, not related to highscore
+hs_obj = high_score.High_Score() # High score
 
 # Updates Game High Score
 def update_score(new_score):
-    score_sec.update(new_score)
-    screen.blit(score_sec.text, (735,0))
+    hs_obj.update(new_score)
+    draw_high_score()
 
 # Updates current game score
 def update_curr_score(score):
@@ -29,6 +30,7 @@ def update_curr_score(score):
 # Displays Game Over view
 # TODO: Fix fitment of text
 def game_over():
+
     # Black out screen
     screen.fill(pygame.Color(255, 255, 255, 255))
     pygame.draw.rect(screen, (10,10,10,10), [320,40,640,640])
@@ -64,6 +66,10 @@ def draw_score(score):
     font = pygame.font.SysFont('Comic Sans MS', 25)
     img = font.render(txt_str, False, (0, 0, 0))
     render_item(320, 720, img)
+
+# Renders high score from high score object
+def draw_high_score():
+    screen.blit(hs_obj.txt, (735,0))
 
 
 def draw_snake(snake, food):
@@ -124,6 +130,7 @@ def draw_all():
         draw_score(score_obj)
         draw_food(food_obj)
         draw_snake(snake_obj, food_obj)
+        draw_high_score()
     else:
         game_over()
         draw_score(score_obj)
@@ -145,7 +152,8 @@ def displayboard():
     screen.fill(pygame.Color(255, 255, 255, 255))
 
     # high score
-    screen.blit(score_sec.text, (735, 0))
+    # screen.blit(score_sec.text, (735, 0))
+    draw_high_score()
 
     # draw border
     startX = 320
