@@ -1,14 +1,8 @@
 import pygame
 from highscore import HighScore
 import board
-import snake
-import food
 import score_curr
 
-# 32 x 32 playing field
-BOARD_WIDTH = 640
-BOARD_LENGTH = 640
-GRID_SIZE = 20
 
 def set_score(curr_score, score):
     # Set score if needed
@@ -19,63 +13,47 @@ def set_score(curr_score, score):
 
 def main():
     pygame.init()
-
     clock = pygame.time.Clock()
     gaming = True
 
-    # Class Snake constructor
-    s = snake.Snake()
-
-    # Class Food constructor
-    f = food.Food(s)
     # High Score constructor
     score = HighScore()
 
     # Score constructor
     scoreObj = score_curr.Score_Curr()
-
-
     curr_score = 0
 
     while gaming:
-        clock.tick(11)
-        for event in pygame.event.get():
-            # Quit Game
-            if event.type == pygame.QUIT:
-                gaming = False
-            s.handle_keys(event)
-
+        clock.tick(12)
+        board.snake_obj.update_pos()
         board.displayboard(scoreObj)
-
         # Return something to signify valid move
-        bad_move = s.move()
+        bad_move = board.snake_obj.move()
         if bad_move:
             board.game_over()
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse = pygame.mouse.get_pos()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                mouse = pygame.mouse.get_pos()
-
-                # QUIT
-                if mouse[0] >= 565 and mouse[0] <= 715 and mouse[1] >= 360 and mouse[1] <= 390:
-                    set_score(curr_score, score)
-                    pygame.quit()
-                    quit()
-                # PLAY AGAIN
-                if mouse[0] >= 565 and mouse[0] <= 715 and mouse[1] >= 400 and mouse[1] <= 430:
-                    main()
+                    # QUIT
+                    if mouse[0] >= 565 and mouse[0] <= 715 and mouse[1] >= 360 and mouse[1] <= 390:
+                        set_score(curr_score, score)
+                        pygame.quit()
+                        sys.exit()
+                    # PLAY AGAIN
+                    if mouse[0] >= 565 and mouse[0] <= 715 and mouse[1] >= 400 and mouse[1] <= 430:
+                        main()
         else:
-            if s.getheadpos() == f.position:
-                s.length += 1
+            if board.snake_obj.getheadpos() == board.food_obj.position:
+                board.snake_obj.length += 1
                 curr_score += 1
-                f.randpos(s)
+                board.food_obj.update_pos(board.snake_obj)
                 scoreObj.update()
                 if curr_score > score.score: 
                     # set new high score on screen
                     board.update_score(curr_score)
 
-            f.draw(board.screen)
-            s.draw(board.screen, f)
-
+            board.draw_all()
             pygame.display.update()
 
     # Game Over

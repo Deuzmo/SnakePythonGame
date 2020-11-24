@@ -1,16 +1,19 @@
+from constants import *
 import pygame
 import sys
 import score
+import snake
+import food
 
-pygame.init()
 
 # set game screen size
-width = 1280
-height = 720
-size = width, height
+size = FRAME_WIDTH, FRAME_HEIGHT
 screen = pygame.display.set_mode(size)
-score_sec = score.Score()
 
+#Initialize board objects
+score_sec = score.Score()
+snake_obj = snake.Snake()
+food_obj = food.Food(snake_obj)
 
 # Updates Game High Score
 def update_score(new_score):
@@ -48,10 +51,76 @@ def game_over():
     pygame.display.update()
 
 
+# Renders the given item into the board.
+def render_item(x, y, item):
+    screen.blit(item, (x, FRAME_HEIGHT-y))
+
+
+def draw_food(food_obj):
+    render_item(food_obj.position[0], food_obj.position[1], food_obj.food)
+
+
+def draw_snake(snake, food):
+    # this first 3 lines would be used to properly render the head according
+    # to the food positionn. Stolen from the move function, teehee
+    headpos = snake.getheadpos()
+    x, y = snake.direction
+    front = (headpos[0] + x * GRID_SIZE, headpos[1] + y * GRID_SIZE)
+    foodpos = food.position
+    for p in snake.positions:
+        if p == snake.getheadpos():
+            if snake.direction == UP:
+                if front == foodpos or p == food.lastpos:
+                    food.lastpos = (-1, -1)  # this prevents lingering hitbox
+                    # for the last position of the food.
+                    render_item(p[0] - 10, p[1] + GRID_SIZE, snake.openup)
+                else:
+                    render_item(p[0], p[1], snake.closedup)
+            elif snake.direction == DOWN:
+                if front == foodpos or p == food.lastpos:
+                    food.lastpos = (-1, -1)
+                    render_item(p[0], p[1], snake.opendown)
+                else:
+                    render_item(p[0], p[1], snake.closeddown)
+            elif snake.direction == LEFT:
+                if front == foodpos or p == food.lastpos:
+                    food.lastpos = (-1, -1)
+                    render_item(p[0] - GRID_SIZE, p[1] + 10, snake.openleft)
+                else:
+                    render_item(p[0], p[1], snake.closedleft)
+            elif snake.direction == RIGHT:
+                if front == foodpos or p == food.lastpos:
+                    food.lastpos = (-1, -1)
+                    render_item(p[0], p[1] + 10, snake.openright)
+                else:
+                    render_item(p[0], p[1], snake.closedright)
+        elif p == snake.gettail():
+            orientation = tuple(map(lambda i, j, k: (i - j) / k,
+                                snake.gettail(1), p, (GRID_SIZE, GRID_SIZE))
+                                )
+            if orientation == UP:
+                render_item(p[0], p[1], snake.taildown)
+            elif orientation == DOWN:
+                render_item(p[0], p[1], snake.tailup)
+            elif orientation == LEFT:
+                render_item(p[0], p[1], snake.tailright)
+            elif orientation == RIGHT:
+                render_item(p[0], p[1], snake.tailleft)
+        else:
+            render_item(p[0], p[1], snake.snekbadi)
+
+
+def draw_all():
+    draw_food(food_obj)
+    draw_snake(snake_obj, food_obj)
+
+
 # keeps screen printed until game is quit
 def displayboard(scoreObj):
-    #for event in pygame.event.get():
-       # if event.type == pygame.QUIT: sys.exit()
+    # Handles window closure
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            sys.exit()
 
     # make screen background white
     screen.fill(pygame.Color(255, 255, 255, 255))
@@ -60,7 +129,7 @@ def displayboard(scoreObj):
     screen.blit(scoreObj.txt, (320, 0))
 
     # high score
-    screen.blit(score_sec.text, (735,0))
+    screen.blit(score_sec.text, (735, 0))
 
     # draw border
     startX = 320
