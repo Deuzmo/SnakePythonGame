@@ -1,16 +1,20 @@
+from constants import *
 import pygame
-import sys
 import score
+import snake
+import food
+import score_curr
 
-pygame.init()
 
 # set game screen size
-width = 1280
-height = 720
-size = width, height
+size = FRAME_WIDTH, FRAME_HEIGHT
 screen = pygame.display.set_mode(size)
-score_sec = score.Score()
 
+#Initialize board objects
+score_sec = score.Score()
+snake_obj = snake.Snake()
+food_obj = food.Food(snake_obj)
+score_obj = score_curr.Score_Curr() # Normal score tracker, not related to highscore
 
 # Updates Game High Score
 def update_score(new_score):
@@ -18,9 +22,9 @@ def update_score(new_score):
     screen.blit(score_sec.text, (735,0))
 
 # Updates current game score
-def update_curr_score(scoreObj):
-    scoreObj.update()
-    screen.blit(scoreObj.txt, (320, 0))
+def update_curr_score(score):
+    score.update()
+    screen.blit(score.txt, (320, 0))
 
 # Displays Game Over view
 # TODO: Fix fitment of text
@@ -45,22 +49,103 @@ def game_over():
     res = txt.render('PLAY AGAIN', False, (0,200,0))
     screen.blit(res, (575,400))
 
-    pygame.display.update()
 
+# Renders the given item into the board.
+def render_item(x, y, item):
+    screen.blit(item, (x, FRAME_HEIGHT-y))
+
+
+def draw_food(food):
+    render_item(food.position[0], food.position[1], food.food)
+
+
+def draw_score(score):
+    txt_str = 'Your Score is: {}'.format(score.curr)
+    font = pygame.font.SysFont('Comic Sans MS', 25)
+    img = font.render(txt_str, False, (0, 0, 0))
+    render_item(320, 720, img)
+
+
+def draw_snake(snake, food):
+
+    # this first 3 lines would be used to properly render the head according
+    # to the food positionn. Stolen from the move function, teehee
+    headpos = snake.getheadpos()
+    x, y = snake.direction
+    front = (headpos[0] + x * GRID_SIZE, headpos[1] + y * GRID_SIZE)
+    foodpos = food.position
+    for p in snake.positions:
+        if p == snake.getheadpos():
+            if snake.direction == UP:
+                if front == foodpos or p == food.lastpos:
+                    food.lastpos = (-1, -1)  # this prevents lingering hitbox
+                    # for the last position of the food.
+                    render_item(p[0] - 10, p[1] + GRID_SIZE, snake.openup)
+                else:
+                    render_item(p[0], p[1], snake.closedup)
+            elif snake.direction == DOWN:
+                if front == foodpos or p == food.lastpos:
+                    food.lastpos = (-1, -1)
+                    render_item(p[0], p[1], snake.opendown)
+                else:
+                    render_item(p[0], p[1], snake.closeddown)
+            elif snake.direction == LEFT:
+                if front == foodpos or p == food.lastpos:
+                    food.lastpos = (-1, -1)
+                    render_item(p[0] - GRID_SIZE, p[1] + 10, snake.openleft)
+                else:
+                    render_item(p[0], p[1], snake.closedleft)
+            elif snake.direction == RIGHT:
+                if front == foodpos or p == food.lastpos:
+                    food.lastpos = (-1, -1)
+                    render_item(p[0], p[1] + 10, snake.openright)
+                else:
+                    render_item(p[0], p[1], snake.closedright)
+        elif p == snake.gettail():
+            orientation = tuple(map(lambda i, j, k: (i - j) / k,
+                                snake.gettail(1), p, (GRID_SIZE, GRID_SIZE))
+                                )
+            if orientation == UP:
+                render_item(p[0], p[1], snake.taildown)
+            elif orientation == DOWN:
+                render_item(p[0], p[1], snake.tailup)
+            elif orientation == LEFT:
+                render_item(p[0], p[1], snake.tailright)
+            elif orientation == RIGHT:
+                render_item(p[0], p[1], snake.tailleft)
+        else:
+            render_item(p[0], p[1], snake.snekbadi)
+
+
+# Function handles logic for deciding what to draw at every frame
+def draw_all():
+    if (snake_obj.alive):
+        displayboard()
+        draw_score(score_obj)
+        draw_food(food_obj)
+        draw_snake(snake_obj, food_obj)
+    else:
+        game_over()
+        draw_score(score_obj)
+    
+    
+
+
+def reinitialize():
+    global snake_obj
+    global food_obj
+    snake_obj = snake.Snake()
+    food_obj = food.Food(snake_obj)
+    score_obj.reset()
 
 # keeps screen printed until game is quit
-def displayboard(scoreObj):
-    #for event in pygame.event.get():
-       # if event.type == pygame.QUIT: sys.exit()
+def displayboard():
 
     # make screen background white
     screen.fill(pygame.Color(255, 255, 255, 255))
 
-    # insert score counter
-    screen.blit(scoreObj.txt, (320, 0))
-
     # high score
-    screen.blit(score_sec.text, (735,0))
+    screen.blit(score_sec.text, (735, 0))
 
     # draw border
     startX = 320
@@ -73,32 +158,7 @@ def displayboard(scoreObj):
     pygame.draw.rect(screen, (0, 0, 0, 0), [startX, startY, thick, length])
     pygame.draw.rect(screen, (0, 0, 0, 0), [startX, endY, length, thick])
     pygame.draw.rect(screen, (0, 0, 0, 0), [endX, startY, thick, length])
-
-    # draw rectangles
-    hor = 360  # starting horizontal pos of rectangle
-    ver = 80  # starting vertical pos of rectangle
-    sq_width = 20  # rectangle width
-    sq_height = 20  # rectangle height
-    square_size = (sq_width, sq_height)  # var combining both rectangle width and height
-
-    #determines num squares printed on playing board
-    y_Range = int(((endY-startY)/sq_height)/2) - 1
-    x_Range = int(((endX-startX)/sq_width)/2) - 1
-
-    for y in range(y_Range):  # loops through all vertical positions
-        for x in range(x_Range):  # loops through all horizontal positions
-            # resets pos of each rectangle
-            pos = (hor, ver)
-            # draws rectangle
-            pygame.draw.rect(screen, (0, 0, 0, 0), [pos, square_size])
-            # increments hor position
-            hor = hor + (sq_width*2)
-        # resets hor position for each row
-        hor = 360
-        # increments ver position
-        ver = ver + (sq_height*2)
-
-
-
-    # update display
-    #pygame.display.flip()
+    
+    #draw grass texture
+    background = pygame.image.load('img/grass.jpg')
+    screen.blit(background, (340, 60))
