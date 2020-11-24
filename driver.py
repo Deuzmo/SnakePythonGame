@@ -27,7 +27,7 @@ def main():
     s = snake.Snake()
 
     # Class Food constructor
-    f = food.Food()
+    f = food.Food(s)
     # High Score constructor
     score = HighScore()
 
@@ -38,7 +38,7 @@ def main():
     curr_score = 0
 
     while gaming:
-        clock.tick(10)
+        clock.tick(11)
         for event in pygame.event.get():
             # Quit Game
             if event.type == pygame.QUIT:
@@ -67,7 +67,7 @@ def main():
             if s.getheadpos() == f.position:
                 s.length += 1
                 curr_score += 1
-                f.randpos()
+                f.randpos(s)
                 scoreObj.update()
                 if curr_score > score.score: 
                     # set new high score on screen
