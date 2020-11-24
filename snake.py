@@ -21,6 +21,10 @@ class Snake:
         self.taildown = pygame.image.load('img/TailDown20px.png')
         self.tailleft = pygame.image.load('img/TailLeft20px.png')
         self.tailright = pygame.image.load('img/TailRight20px.png')
+        self.alive = True
+
+    def grow(self):
+        self.length += 1
 
     def getheadpos(self):
         return self.positions[0]
@@ -39,21 +43,21 @@ class Snake:
         current = self.getheadpos()
         x, y = self.direction
         new = (current[0] + x * GRID_SIZE, current[1] + y * GRID_SIZE)
+
+        # Self-collision check
         if len(self.positions) > 3 and new in self.positions[2:]:
-            print("Oh no!")
-            return True
-        elif (self.positions[0][0] <= 320 #  adds functionality that prevents snek from moving beyond boarder
-                or self.positions[0][0] >= 960
-                or self.positions[0][1] <= 40
-                or self.positions[0][1] >= 680):
-            return True
+            self.alive = False
+        # Border Collision check
+        elif (new[0] <= 320 or new[0] >= 960
+                or new[1] <= 40 or new[1] >= 680):
+            self.alive = False
         else:
             self.positions.insert(0, new)
             if self.length < len(self.positions):
                 self.positions.pop()
-            return False
+            self.alive = True
 
-    def handle_keys(self, event):
+    def input_handler(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 self.turn(UP)
@@ -63,7 +67,3 @@ class Snake:
                 self.turn(LEFT)
             elif event.key == pygame.K_RIGHT:
                 self.turn(RIGHT)
-
-    def update_pos(self):
-        for event in pygame.event.get():
-            self.handle_keys(event)

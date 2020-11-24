@@ -1,9 +1,9 @@
 from constants import *
 import pygame
-import sys
 import score
 import snake
 import food
+import score_curr
 
 
 # set game screen size
@@ -14,6 +14,7 @@ screen = pygame.display.set_mode(size)
 score_sec = score.Score()
 snake_obj = snake.Snake()
 food_obj = food.Food(snake_obj)
+score_obj = score_curr.Score_Curr() # Normal score tracker, not related to highscore
 
 # Updates Game High Score
 def update_score(new_score):
@@ -21,9 +22,9 @@ def update_score(new_score):
     screen.blit(score_sec.text, (735,0))
 
 # Updates current game score
-def update_curr_score(scoreObj):
-    scoreObj.update()
-    screen.blit(scoreObj.txt, (320, 0))
+def update_curr_score(score):
+    score.update()
+    screen.blit(score.txt, (320, 0))
 
 # Displays Game Over view
 # TODO: Fix fitment of text
@@ -48,19 +49,25 @@ def game_over():
     res = txt.render('PLAY AGAIN', False, (0,200,0))
     screen.blit(res, (575,400))
 
-    pygame.display.update()
-
 
 # Renders the given item into the board.
 def render_item(x, y, item):
     screen.blit(item, (x, FRAME_HEIGHT-y))
 
 
-def draw_food(food_obj):
-    render_item(food_obj.position[0], food_obj.position[1], food_obj.food)
+def draw_food(food):
+    render_item(food.position[0], food.position[1], food.food)
+
+
+def draw_score(score):
+    txt_str = 'Your Score is: {}'.format(score.curr)
+    font = pygame.font.SysFont('Comic Sans MS', 25)
+    img = font.render(txt_str, False, (0, 0, 0))
+    render_item(320, 720, img)
 
 
 def draw_snake(snake, food):
+
     # this first 3 lines would be used to properly render the head according
     # to the food positionn. Stolen from the move function, teehee
     headpos = snake.getheadpos()
@@ -110,23 +117,32 @@ def draw_snake(snake, food):
             render_item(p[0], p[1], snake.snekbadi)
 
 
+# Function handles logic for deciding what to draw at every frame
 def draw_all():
-    draw_food(food_obj)
-    draw_snake(snake_obj, food_obj)
+    if (snake_obj.alive):
+        displayboard()
+        draw_score(score_obj)
+        draw_food(food_obj)
+        draw_snake(snake_obj, food_obj)
+    else:
+        game_over()
+        draw_score(score_obj)
+    
+    
 
+
+def reinitialize():
+    global snake_obj
+    global food_obj
+    snake_obj = snake.Snake()
+    food_obj = food.Food(snake_obj)
+    score_obj.reset()
 
 # keeps screen printed until game is quit
-def displayboard(scoreObj):
-    # Handles window closure
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            sys.exit()
+def displayboard():
 
     # make screen background white
     screen.fill(pygame.Color(255, 255, 255, 255))
-
-    # insert score counter
-    screen.blit(scoreObj.txt, (320, 0))
 
     # high score
     screen.blit(score_sec.text, (735, 0))
@@ -146,6 +162,3 @@ def displayboard(scoreObj):
     #draw grass texture
     background = pygame.image.load('img/grass.jpg')
     screen.blit(background, (340, 60))
-
-    # update display
-    #pygame.display.flip()
