@@ -13,10 +13,10 @@ class High_Score:
 	    self.txt = self.make_txt(self.curr)
 
 	    #new
-	    self.scores = self.high_scores()
+	    # self.scores = self.high_scores()
 
-	    # check against this
-	    self.min_score = self.get_min(self.scores)
+	    # # check against this
+	    # self.min_score = self.get_min(self.scores)
 
 	# Retrieves minimum to qualify for new high score
 	# check if current score > minimum
