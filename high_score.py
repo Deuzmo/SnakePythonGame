@@ -2,21 +2,30 @@ import pygame
 
 pygame.font.init()
 
+max_hs = 5
+
+#
+# Top players will be saved
+#
 class High_Score:
-	curr = 0
-	txt = None
 
 	# Constructor
-	# Sets user high score or 0 if none available
 	def __init__(self):
-	    self.curr = self.get_score()
-	    self.txt = self.make_txt(self.curr)
 
-	    #new
-	    # self.scores = self.high_scores()
 
-	    # # check against this
-	    # self.min_score = self.get_min(self.scores)
+	    # Scores in list/dict form
+	    self.scores = self.get_high_scores()
+
+	    # Use to check if curr score to be saved
+	    self.min_score = self.get_min(self.scores)
+
+	    self.score_set = False
+
+
+	def reset(self):
+		self.score_set = False
+		self.scores = self.get_high_scores()
+		self.min_score = self.get_min(self.scores)
 
 	# Retrieves minimum to qualify for new high score
 	# check if current score > minimum
@@ -24,12 +33,15 @@ class High_Score:
 		vals = []
 		for item in scores:
 			vals.append(item.values()[0])
-		return min(vals)
+		if len(vals) == 0:
+			return 0
+		else:
+			return min(vals)
 
 
 	# Returns a list of dictionary of high scores
 	# Format -> [{<username>:<high score>}]
-	def high_scores(self):
+	def get_high_scores(self):
 		file = open('scores.txt', 'r')
 		content = file.readlines()
 		hs = []
@@ -40,40 +52,33 @@ class High_Score:
 		file.close()
 		return hs
 
+	# Writes high scores to file
+	def set_high_scores(self):
+		file = open('scores.txt', 'w')
+		for score in self.scores:
+			for val in score:
+				file.write(val + ' ' + str(score[val]) + '\n')
+		file.close()
+
+
+	# Adds latest high score in appropriate postion
+	# trims array by 1 (if length > 5) to adjust
+	# CALL UPON GAME END IF CURR > MIN
 	def add_new_high_score(self, name, score):
+		self.score_set = True
 		i = 0
-		for hs in self.scores:
-			curr = hs.values[0]
-			if score > curr:
-				hs.insert(i, {name:score})
-				break
 
-	# Updates high score file
-	def set_score(self):
-	    file = open('score.txt', 'w')
-	    write = 'High Score: {}'.format(self.curr)
-	    file.write(write)
-	    file.close()
+		# init config
+		if len(self.scores) == 0:
+			self.scores.append({name:score})
 
-	# Renders text to attach to board
-	def make_txt(self, score):
-		txt_str = 'Your High Score is: {}'.format(score)
-		txt = pygame.font.SysFont('Comic Sans MS', 25)
-		return txt.render(txt_str, False, (0,0,0))
-
-	def update(self, score):
-		self.curr = score
-		self.txt = self.make_txt(score)
-		self.set_score()
-
-	def get_score(self):
-		# get score from file or 0 if no file
-	    file = open('score.txt', 'r')
-	    contents = file.read()
-	    vals = contents.split(' ')
-	    try:
-	        score = int(vals[len(vals)-1])
-	    except IndexError:
-	        score = 0
-	    file.close()
-	    return score
+		# once more hs
+		else:
+			for hs in self.scores:
+				for item in hs:
+					curr = hs[item]
+					if score > curr:
+						self.scores.insert(i, {name:score})
+						if len(self.scores) > 5:
+							self.scores = self.scores[:5]
+						return
