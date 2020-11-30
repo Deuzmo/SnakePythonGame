@@ -1,4 +1,5 @@
 from constants import *
+from enum import Enum
 import pygame
 import snake
 import food
@@ -15,20 +16,92 @@ snake_obj = snake.Snake()
 food_obj = food.Food(snake_obj)
 score_obj = score.Score()
 
-# use on game over
-hs_obj = high_score.High_Score() # hs object
 
-# Updates current game score
-def update_curr_score(score):
-    score.update()
-    screen.blit(score.txt, (320, 0))
+# Indicates game state, perhaps convert board to an object?
+class Game_state(Enum):
+    MENU = 0
+    PLAYING = 1
+    GAMEOVER_SCREEN = 2
+    HIGHSCORE_SCREEN = 3
+
+
+# Initial state will be menu
+state = Game_state.MENU
+
+# Initialize game over screen objects
+hs_obj = high_score.High_Score()  # hs object
+
+
+# Displays Main Menu
+def display_menu():
+    screen.fill(SILVER)
+    pygame.draw.rect(screen, BLACK, [320,40,BOARD_WIDTH,BOARD_LENGTH])  
+    img = pygame.image.load('img/Snek640x320p.png')
+    x_offset = img.get_rect().width/2
+    render_item(CENTER_X - x_offset, FRAME_HEIGHT - 100, img)
+    
+    first_btn_pos = CENTER_X - ((BTN_W)*3 + 40)/2
+    second_btn_pos = first_btn_pos + BTN_W + 20
+    third_btn_pos = second_btn_pos + BTN_W + 20
+    
+    btn_y_pos = CENTER_Y + 180
+
+    # Draw QUIT button
+    pygame.draw.rect(screen, GRAY, [first_btn_pos, 
+                                    btn_y_pos,
+                                    BTN_W,
+                                    BTN_H])  # x, y, width(x), height(y)  
+
+    # Draw PLAY button
+    pygame.draw.rect(screen, GRAY, [second_btn_pos, 
+                                    btn_y_pos,
+                                    BTN_W,
+                                    BTN_H])  # x, y, width(x), height(y)  
+
+    # Draw High Scores button
+    pygame.draw.rect(screen, GRAY, [third_btn_pos, 
+                                    btn_y_pos,
+                                    BTN_W,
+                                    BTN_H])  # x, y, width(x), height(y)
+
+    # Decide whether buttons are lighted up or not
+    mx, my = pygame.mouse.get_pos()
+    if (mx >= first_btn_pos and mx <= first_btn_pos+BTN_W and
+            my >= btn_y_pos and my <= btn_y_pos+BTN_H):
+        pygame.draw.rect(screen, LIGHTGRAY, [first_btn_pos, btn_y_pos, BTN_W, BTN_H])
+    elif (mx >= second_btn_pos and mx <= second_btn_pos+BTN_W and
+            my >= btn_y_pos and my <= btn_y_pos+BTN_H):
+        pygame.draw.rect(screen, LIGHTGRAY, [second_btn_pos, btn_y_pos, BTN_W, BTN_H])
+    elif (mx >= third_btn_pos and mx <= third_btn_pos+BTN_W and
+            my >= btn_y_pos and my <= btn_y_pos+BTN_H):
+        pygame.draw.rect(screen, LIGHTGRAY, [third_btn_pos, btn_y_pos, BTN_W, BTN_H])
+
+    first_txt_center = first_btn_pos + (BTN_W/2)
+    second_txt_center = first_txt_center + BTN_W + 20
+    third_txt_center =  second_txt_center + BTN_W + 20
+    # Draw QUIT button text
+    txt = pygame.font.SysFont('Comic Sans MS', 20)
+    img = txt.render('QUIT', True, BLACK)
+    offset_from_center = img.get_rect().width/2
+    screen.blit(img, (first_txt_center - offset_from_center, btn_y_pos))
+
+    # DRAW PLAY Button text
+    txt = pygame.font.SysFont('Comic Sans MS', 20)
+    img = txt.render('PLAY', True, BLACK)
+    offset_from_center = img.get_rect().width/2
+    screen.blit(img, (second_txt_center - offset_from_center, btn_y_pos))
+
+    # DRAW High Scores Button text
+    txt = pygame.font.SysFont('Comic Sans MS', 20)
+    img = txt.render('HIGH SCORES', True, BLACK)
+    offset_from_center = img.get_rect().width/2
+    screen.blit(img, (third_txt_center - offset_from_center, btn_y_pos))
+    
 
 # Displays Game Over view
-# TODO: Fix fitment of text
 def game_over():
     # Black out screen
-    screen.fill(pygame.Color(255, 255, 255, 255))
-    pygame.draw.rect(screen, (10,10,10,10), [320,40,640,640])
+    pygame.draw.rect(screen, BLACK, [320,40,640,640])
 
     # Prompt user to input user for high score display
     if score_obj.curr > hs_obj.min_score:
@@ -38,7 +111,7 @@ def game_over():
         render_item(CENTER_X - offset_from_center,
                     (CENTER_Y/2) + 300,
                     img)
-        if not hs_obj.score_set: # so it doesnt loop
+        if not hs_obj.score_set:  # so it doesnt loop
 
             # REPLACE test with user input name
             hs_obj.add_new_high_score('test', score_obj.curr)
@@ -51,9 +124,8 @@ def game_over():
     render_item(CENTER_X - offset_from_center, CENTER_Y + 40, img)
 
     # Draw MENU button
-    pygame.draw.rect(screen, GRAY, [565,360,150,30]) # x, y, width(x), height(y)
-    
-    # Draw QUIT button
+    pygame.draw.rect(screen, GRAY, [565,360,150,30]) # x, y, width(x), height(y)  
+    # Draw PLAY AGAIN button
     pygame.draw.rect(screen, GRAY, [565,400,150,30])
 
 
@@ -63,8 +135,6 @@ def game_over():
         pygame.draw.rect(screen, LIGHTGRAY, [565,360,150,30])  # x, y, width(x), height(y)
     elif (mposx >= 565 and mposx <= 715 and mposy >= 400 and mposy <= 430):
         pygame.draw.rect(screen, LIGHTGRAY, [565,400,150,30])
-        
-
 
     # Draw MENU button text
     txt = pygame.font.SysFont('Comic Sans MS', 20)
@@ -147,32 +217,40 @@ def draw_snake(snake, food):
 
 # Function handles logic for deciding what to draw at every frame
 def draw_all():
-    if (snake_obj.alive):
+    global state
+    if state is Game_state.MENU:
+        display_menu()
+    elif (state is Game_state.PLAYING):
         displayboard()
         draw_score(score_obj)
         draw_food(food_obj)
         draw_snake(snake_obj, food_obj)
-    else:
+    elif (state is Game_state.GAMEOVER_SCREEN):
         game_over()
         draw_score(score_obj)
+    elif (state is Game_state.HIGHSCORE_SCREEN):
+        #  Do stuff related to highscore
+        return
     
     
 
-
+# Function handles reinitialization of the game when clicking PLAY AGAIN
 def reinitialize():
     global snake_obj
     global food_obj
+    global state
+    state = Game_state.PLAYING
     snake_obj = snake.Snake()
     food_obj = food.Food(snake_obj)
     score_obj.reset()
     hs_obj.reset()
 
 
-# keeps screen printed until game is quit
+# displays the game board
 def displayboard():
 
     # make screen background white
-    screen.fill(pygame.Color(255, 255, 255, 255))
+    screen.fill(SILVER)
 
     # draw border
     startX = 320
