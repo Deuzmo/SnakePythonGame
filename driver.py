@@ -3,14 +3,8 @@ import board
 import sys
 
 
-# def set_score(curr_score, score):
-#     # Set score if needed
-#     if curr_score > score.score:
-#         score.score = curr_score
-#         score.set_score()
-
-
 def main():
+
     pygame.init()
     clock = pygame.time.Clock()
     gaming = True
@@ -33,7 +27,6 @@ def main():
                 board.snake_obj.grow()
                 board.food_obj.update_pos(board.snake_obj)
                 board.score_obj.update()
-                board.hs_obj.update(board.score_obj.curr) #
 
         else:
             # Process input in Game Over screen
