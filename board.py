@@ -227,7 +227,6 @@ def draw_all():
         draw_snake(snake_obj, food_obj)
     elif (state is Game_state.GAMEOVER_SCREEN):
         game_over()
-        draw_score(score_obj)
     elif (state is Game_state.HIGHSCORE_SCREEN):
         #  Do stuff related to highscore
         return
