@@ -1,23 +1,23 @@
-# import pygame
-# import highscore
+import pygame
 
-# ---------------------DEPRECATE
-
-# pygame.font.init()
-# hs = highscore.HighScore()
-
-# # Renders text to attach to board
-# def make_txt(score):
-# 	txt_str = 'Your High Score is: {}'.format(score)
-# 	txt = pygame.font.SysFont('Comic Sans MS', 25)
-# 	return txt.render(txt_str, False, (0,0,0))
-
-# class Score:
-# 	def __init__(self):
-# 		self.text = make_txt(hs.score)
-
-# 	def update(self, new_score):
-# 		self.text = make_txt(new_score)
+pygame.font.init()
 
 
+class Score:
+	curr = 0
+	txt = None
 
+	def __init__(self):
+		self.txt = self.make_txt(self.curr)
+
+	def make_txt(self, score):
+		txt_str = 'Your Score is: {}'.format(score)
+		txt = pygame.font.SysFont('Comic Sans MS', 25)
+		return txt.render(txt_str, False, (0, 0, 0))
+	
+	def reset(self):
+		self.curr = 0
+
+	def update(self):
+		self.curr += 1
+		self.txt = self.make_txt(self.curr)

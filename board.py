@@ -1,9 +1,8 @@
 from constants import *
 import pygame
-import score
 import snake
 import food
-import score_curr
+import score
 import high_score
 
 
@@ -14,10 +13,9 @@ screen = pygame.display.set_mode(size)
 #Initialize board objects
 snake_obj = snake.Snake()
 food_obj = food.Food(snake_obj)
-score_obj = score_curr.Score_Curr() # Normal score tracker, not related to highscore
+score_obj = score.Score()
 
 # use on game over
-print('score init')
 hs_obj = high_score.High_Score() # hs object
 
 # Updates current game score
