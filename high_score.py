@@ -73,7 +73,7 @@ class High_Score:
 
 		# once more hs
 		else:
-			for index, hs in zip(range(len(self.scores)), self.scores):
+			for index, hs in enumerate(self.scores):
 				if score > hs[1]:
 					self.scores.insert(index, (name, score))
 					if len(self.scores) > 5:

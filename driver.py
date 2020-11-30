@@ -20,6 +20,7 @@ def main():
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     board.snake_obj.input_handler(event)
+                    break  # Do not take more than one input per frame
                     
             board.snake_obj.move()
 

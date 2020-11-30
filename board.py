@@ -26,34 +26,57 @@ def update_curr_score(score):
 # Displays Game Over view
 # TODO: Fix fitment of text
 def game_over():
+    # Black out screen
+    screen.fill(pygame.Color(255, 255, 255, 255))
+    pygame.draw.rect(screen, (10,10,10,10), [320,40,640,640])
 
     # Prompt user to input user for high score display
     if score_obj.curr > hs_obj.min_score:
+        txt = pygame.font.SysFont('Comic Sans MS', 25)
+        img = txt.render('You have achieved a new high score!', True, LIME)
+        offset_from_center = img.get_rect().width/2
+        render_item(CENTER_X - offset_from_center,
+                    (CENTER_Y/2) + 300,
+                    img)
         if not hs_obj.score_set: # so it doesnt loop
 
             # REPLACE test with user input name
             hs_obj.add_new_high_score('test', score_obj.curr)
             hs_obj.set_high_scores()
 
-    # Black out screen
-    screen.fill(pygame.Color(255, 255, 255, 255))
-    pygame.draw.rect(screen, (10,10,10,10), [320,40,640,640])
-
     # Draw game over
     txt = pygame.font.SysFont('Comic Sans MS', 25)
-    res = txt.render('GAME OVER', False, (0,200,0))
-    screen.blit(res, (565,320))
+    img = txt.render('GAME OVER', True, RED)
+    offset_from_center = img.get_rect().width/2
+    render_item(CENTER_X - offset_from_center, CENTER_Y + 40, img)
 
-    # Draw buttons
-    pygame.draw.rect(screen, (255, 255, 255, 255), [565,360,150,30]) # x, y, width(x), height(y)
-    pygame.draw.rect(screen, (255, 255, 255, 255), [565,400,150,30])
+    # Draw MENU button
+    pygame.draw.rect(screen, GRAY, [565,360,150,30]) # x, y, width(x), height(y)
+    
+    # Draw QUIT button
+    pygame.draw.rect(screen, GRAY, [565,400,150,30])
 
-    # Draw button text
+
+    # Decide whether buttons are lighted up or not
+    mposx, mposy = pygame.mouse.get_pos()
+    if (mposx >= 565 and mposx <= 715 and mposy >= 360 and mposy <= 390):
+        pygame.draw.rect(screen, LIGHTGRAY, [565,360,150,30])  # x, y, width(x), height(y)
+    elif (mposx >= 565 and mposx <= 715 and mposy >= 400 and mposy <= 430):
+        pygame.draw.rect(screen, LIGHTGRAY, [565,400,150,30])
+        
+
+
+    # Draw MENU button text
     txt = pygame.font.SysFont('Comic Sans MS', 20)
-    res = txt.render('QUIT', False, (0,200,0))
-    screen.blit(res, (600,360))
-    res = txt.render('PLAY AGAIN', False, (0,200,0))
-    screen.blit(res, (575,400))
+    img = txt.render('MENU', True, BLACK)
+    offset_from_center = img.get_rect().width/2
+    render_item(CENTER_X - offset_from_center, CENTER_Y, img)
+
+    # DRAW PLAY AGAIN Button text
+    txt = pygame.font.SysFont('Comic Sans MS', 20)
+    img = txt.render('PLAY AGAIN', True, BLACK)
+    offset_from_center = img.get_rect().width/2
+    render_item(CENTER_X - offset_from_center, CENTER_Y - 40, img)
 
 
 # Renders the given item into the board.
@@ -68,7 +91,7 @@ def draw_food(food):
 def draw_score(score):
     txt_str = 'Your Score is: {}'.format(score.curr)
     font = pygame.font.SysFont('Comic Sans MS', 25)
-    img = font.render(txt_str, False, (0, 0, 0))
+    img = font.render(txt_str, True, (0, 0, 0))
     render_item(320, 720, img)
 
 def draw_snake(snake, food):
