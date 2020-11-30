@@ -1,5 +1,5 @@
 CS152 Project: Snake Game
 
 Requirements:
-* Python 2.7
+* Python 3.4
 * pygame (pip install pygame)
