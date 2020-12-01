@@ -5,6 +5,7 @@ import snake
 import food
 import score
 import high_score
+import pygame_textinput
 
 
 # set game screen size
@@ -15,6 +16,7 @@ screen = pygame.display.set_mode(size)
 snake_obj = snake.Snake()
 food_obj = food.Food(snake_obj)
 score_obj = score.Score()
+textinput = pygame_textinput.TextInput(text_color=(255,255,255), font_size=30)
 
 
 # Indicates game state, perhaps convert board to an object?
@@ -23,6 +25,7 @@ class Game_state(Enum):
     PLAYING = 1
     GAMEOVER_SCREEN = 2
     HIGHSCORE_SCREEN = 3
+    curr_event = []
 
 
 # Initial state will be menu
@@ -96,10 +99,9 @@ def display_menu():
     img = txt.render('HIGH SCORES', True, BLACK)
     offset_from_center = img.get_rect().width/2
     screen.blit(img, (third_txt_center - offset_from_center, btn_y_pos))
-    
 
 # Displays Game Over view
-def game_over():
+def game_over(events):
     # Black out screen
     pygame.draw.rect(screen, BLACK, [320,40,640,640])
 
@@ -147,6 +149,18 @@ def game_over():
     img = txt.render('PLAY AGAIN', True, BLACK)
     offset_from_center = img.get_rect().width/2
     render_item(CENTER_X - offset_from_center, CENTER_Y - 40, img)
+
+    # ------------- TEXT INPUT -------------------
+    # Not formatted
+    # Needs to be cleared upon submission
+
+    submitted = textinput.update(events)
+    pygame.draw.rect(screen, GRAY, [720, 320,100,40])
+    render_item(720, 320, textinput.get_surface())
+
+    # Return true if return key hit
+    if submitted:
+        hs_obj.add_new_high_score(textinput.get_text(), score_obj.curr)
 
 
 # Renders the given item into the board.
@@ -216,7 +230,7 @@ def draw_snake(snake, food):
 
 
 # Function handles logic for deciding what to draw at every frame
-def draw_all():
+def draw_all(events):
     global state
     if state is Game_state.MENU:
         display_menu()
@@ -226,7 +240,7 @@ def draw_all():
         draw_food(food_obj)
         draw_snake(snake_obj, food_obj)
     elif (state is Game_state.GAMEOVER_SCREEN):
-        game_over()
+        game_over(events)
     elif (state is Game_state.HIGHSCORE_SCREEN):
         #  Do stuff related to highscore
         return
