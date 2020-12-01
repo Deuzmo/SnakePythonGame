@@ -152,7 +152,7 @@ def game_over(events):
 
     # ------------- TEXT INPUT -------------------
     # Not formatted
-    # Needs to be cleared upon submission
+    # Needs to be cleared upon submission (Return key)
 
     submitted = textinput.update(events)
     pygame.draw.rect(screen, GRAY, [720, 320,100,40])
