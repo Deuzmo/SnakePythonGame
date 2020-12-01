@@ -16,7 +16,7 @@ screen = pygame.display.set_mode(size)
 snake_obj = snake.Snake()
 food_obj = food.Food(snake_obj)
 score_obj = score.Score()
-textinput = pygame_textinput.TextInput(text_color=(255,255,255), font_size=30)
+textinput = pygame_textinput.TextInput(text_color=RED, font_size=30, max_string_length=7)
 
 
 # Indicates game state, perhaps convert board to an object?
@@ -25,7 +25,6 @@ class Game_state(Enum):
     PLAYING = 1
     GAMEOVER_SCREEN = 2
     HIGHSCORE_SCREEN = 3
-    curr_event = []
 
 
 # Initial state will be menu
@@ -108,16 +107,31 @@ def game_over(events):
     # Prompt user to input user for high score display
     if score_obj.curr > hs_obj.min_score:
         txt = pygame.font.SysFont('Comic Sans MS', 25)
-        img = txt.render('You have achieved a new high score!', True, LIME)
-        offset_from_center = img.get_rect().width/2
-        render_item(CENTER_X - offset_from_center,
-                    (CENTER_Y/2) + 300,
-                    img)
-        if not hs_obj.score_set:  # so it doesnt loop
+        if not hs_obj.score_set:
+            img = txt.render('You have achieved a new high score!', True, LIME)
+            sub_img = txt.render('Enter a username to save score:', True, LIME)
+            offset_from_center = img.get_rect().width/2
+            render_item(CENTER_X - offset_from_center,
+                        (CENTER_Y/2) + 330,
+                        img)
+            render_item(CENTER_X - offset_from_center,
+                        (CENTER_Y/2) + 300,
+                        sub_img)
+            submitted = textinput.update(events)
+            pygame.draw.rect(screen, WHITE, [CENTER_X-50, 280,100,30])
+            render_item(CENTER_X-50, 430, textinput.get_surface())
 
-            # REPLACE test with user input name
-            hs_obj.add_new_high_score('test', score_obj.curr)
-            hs_obj.set_high_scores()
+            # Return true if return key hit
+            if submitted:
+                hs_obj.add_new_high_score(textinput.get_text(), score_obj.curr)
+                hs_obj.set_high_scores()
+                textinput.clear_text()
+        else:
+            saved = txt.render('High Score saved.', True, LIME)
+            offset_from_center = saved.get_rect().width/2
+            render_item(CENTER_X - offset_from_center,
+                        (CENTER_Y/2) + 330,
+                        saved)
 
     # Draw game over
     txt = pygame.font.SysFont('Comic Sans MS', 25)
@@ -149,18 +163,6 @@ def game_over(events):
     img = txt.render('PLAY AGAIN', True, BLACK)
     offset_from_center = img.get_rect().width/2
     render_item(CENTER_X - offset_from_center, CENTER_Y - 40, img)
-
-    # ------------- TEXT INPUT -------------------
-    # Not formatted
-    # Needs to be cleared upon submission (Return key)
-
-    submitted = textinput.update(events)
-    pygame.draw.rect(screen, GRAY, [720, 320,100,40])
-    render_item(720, 320, textinput.get_surface())
-
-    # Return true if return key hit
-    if submitted:
-        hs_obj.add_new_high_score(textinput.get_text(), score_obj.curr)
 
 
 # Renders the given item into the board.

@@ -69,7 +69,7 @@ class High_Score:
 
 		# init config
 		if len(self.scores) == 0:
-			self.scores.append({name: score})
+			self.scores.insert(0, (name, score))
 
 		# once more hs
 		else:
