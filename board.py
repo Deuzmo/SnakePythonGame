@@ -203,9 +203,9 @@ def display_highscores():
     for name, score in hscores:
         if first:
             name_txt = pygame.font.SysFont('Comic Sans MS', 50)
-            name_img = name_txt.render(name, True, TEAL)
+            name_img = name_txt.render(name, True, GOLD)
             score_txt = pygame.font.SysFont('Comic Sans MS', 50)
-            score_img = score_txt.render(str(score), True, TEAL)
+            score_img = score_txt.render(str(score), True, GOLD)
             first = False
         else:
             name_txt = pygame.font.SysFont('Comic Sans MS', 40)
