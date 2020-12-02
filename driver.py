@@ -106,7 +106,7 @@ def main():
                     mouse = pygame.mouse.get_pos()
 
                     # BACK TO MENU
-                    if mouse[0] >= CENTER_X-75 and mouse[0] <= CENTER_X+75 and mouse[1] >= CENTER_Y + 250 and mouse[1] <= CENTER_Y + 280:
+                    if mouse[0] >= CENTER_X-75 and mouse[0] <= CENTER_X+75 and mouse[1] >= CENTER_Y + 180 and mouse[1] <= CENTER_Y + 210:
                         board.state = board.Game_state.MENU
 
         # Render changes

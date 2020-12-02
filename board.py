@@ -181,21 +181,21 @@ def display_highscores():
     offset_from_center = img.get_rect().width/2
     render_item(CENTER_X - offset_from_center, CENTER_Y + 300, img)
 
-    # Draw MENU button
-    pygame.draw.rect(screen, GRAY, [CENTER_X-75,CENTER_Y + 250,150,30]) # x, y, width(x), height(y)
+    # Draw BACK button
+    pygame.draw.rect(screen, GRAY, [CENTER_X-75,CENTER_Y + 180,150,30]) # x, y, width(x), height(y)
 
 
     # Decide whether buttons are lighted up or not
     mposx, mposy = pygame.mouse.get_pos()
-    if (mposx >= CENTER_X-75 and mposx <= CENTER_X+75 and mposy >= CENTER_Y + 250 and mposy <= CENTER_Y + 280):
-        pygame.draw.rect(screen, LIGHTGRAY, [CENTER_X-75,CENTER_Y + 250,150,30])  # x, y, width(x), height(y)
+    if (mposx >= CENTER_X-75 and mposx <= CENTER_X+75 and mposy >= CENTER_Y + 180 and mposy <= CENTER_Y + 210):
+        pygame.draw.rect(screen, LIGHTGRAY, [CENTER_X-75,CENTER_Y + 180,150,30])  # x, y, width(x), height(y)
 
 
-    # Draw MENU button text
+    # Draw BACK button text
     txt = pygame.font.SysFont('Comic Sans MS', 20)
-    img = txt.render('BACK', True, WHITE)
+    img = txt.render('BACK', True, BLACK)
     offset_from_center = img.get_rect().width/2
-    render_item(CENTER_X - offset_from_center, CENTER_Y - 250, img)
+    render_item(CENTER_X - offset_from_center, CENTER_Y - 180, img)
 
     hscores = hscore_obj.get_high_scores()
     list_pos = 0
@@ -206,15 +206,18 @@ def display_highscores():
             name_img = name_txt.render(name, True, GOLD)
             score_txt = pygame.font.SysFont('Comic Sans MS', 50)
             score_img = score_txt.render(str(score), True, GOLD)
+            render_item(CENTER_X - 160, CENTER_Y + 210 + list_pos, name_img)
+            render_item(CENTER_X + 90, CENTER_Y + 210 + list_pos, score_img)
             first = False
         else:
             name_txt = pygame.font.SysFont('Comic Sans MS', 40)
             name_img = name_txt.render(name, True, SILVER)
             score_txt = pygame.font.SysFont('Comic Sans MS', 40)
             score_img = score_txt.render(str(score), True, SILVER)
+            render_item(CENTER_X - 150, CENTER_Y + 200 + list_pos, name_img)
+            render_item(CENTER_X + 100, CENTER_Y + 200 + list_pos, score_img)
 
-        render_item(CENTER_X - 150, CENTER_Y + 200 + list_pos, name_img)
-        render_item(CENTER_X + 100, CENTER_Y + 200 + list_pos, score_img)
+
 
         # This increment will position the next line accordingly
         list_pos -= 60
