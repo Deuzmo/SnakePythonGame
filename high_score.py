@@ -60,7 +60,7 @@ class High_Score:
 		file.close()
 
 
-	# Adds latest high score in appropriate postion
+	# Adds latest high score in appropriate position
 	# trims array by 1 (if length > 5) to adjust
 	# CALL UPON GAME END IF CURR > MIN
 	def add_new_high_score(self, name, score):

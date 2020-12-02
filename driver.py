@@ -11,7 +11,6 @@ def main():
     gaming = True
 
     while gaming:
-        over = False
         clock.tick(12)
 
         if (board.state is board.Game_state.MENU):
@@ -68,7 +67,9 @@ def main():
         elif (board.state is board.Game_state.GAMEOVER_SCREEN):
             events = pygame.event.get()
 
-            # Process input in Game Over screen
+            # Process keyboard presses
+            board.save_highscore = board.text_input.update(events)
+            # Process mouse input 
             for event in events:
 
                 if event.type == pygame.QUIT:
@@ -84,17 +85,13 @@ def main():
                     # PLAY AGAIN
                     if mouse[0] >= 565 and mouse[0] <= 715 and mouse[1] >= 400 and mouse[1] <= 430:
                         board.reinitialize()
-                board.draw_all(events)
-                over = True
-
 
         elif (board.state is board.Game_state.HIGHSCORE_SCREEN):
             # go back to main menu since highscore menu is not implemented
             board.state = board.Game_state.MENU
 
         # Render changes
-        if not over:
-            board.draw_all([])
+        board.draw_all()
         pygame.display.update()
 
 
