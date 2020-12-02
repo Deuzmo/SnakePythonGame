@@ -49,7 +49,7 @@ class High_Score:
 			for line in content:
 				score = line.split(' ')
 				if len(score) > 1:
-					hs.append((score[0], score[1].rstrip())) # I had to remove the int casting because the render was bugging with it
+					hs.append((score[0], int(score[1].rstrip())))
 		except FileNotFoundError:
 			file = open('scores.txt', 'x')
 

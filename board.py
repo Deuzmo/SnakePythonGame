@@ -205,13 +205,13 @@ def display_highscores():
             name_txt = pygame.font.SysFont('Comic Sans MS', 50)
             name_img = name_txt.render(name, True, TEAL)
             score_txt = pygame.font.SysFont('Comic Sans MS', 50)
-            score_img = score_txt.render(score, True, TEAL)
+            score_img = score_txt.render(str(score), True, TEAL)
             first = False
         else:
             name_txt = pygame.font.SysFont('Comic Sans MS', 40)
             name_img = name_txt.render(name, True, SILVER)
             score_txt = pygame.font.SysFont('Comic Sans MS', 40)
-            score_img = score_txt.render(score, True, SILVER)
+            score_img = score_txt.render(str(score), True, SILVER)
 
         render_item(CENTER_X - 150, CENTER_Y + 200 + list_pos, name_img)
         render_item(CENTER_X + 100, CENTER_Y + 200 + list_pos, score_img)
