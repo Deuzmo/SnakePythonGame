@@ -19,7 +19,7 @@ score_obj = score.Score()
 text_input = pygame_textinput.TextInput(text_color=RED, font_size=30, 
                                        max_string_length=7, antialias=True,
                                        repeat_keys_initial_ms=400,
-                                       repeat_keys_interval_ms=400)
+                                       repeat_keys_interval_ms=100)
 save_highscore = False
 
 
