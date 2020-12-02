@@ -32,7 +32,7 @@ class High_Score:
 	def get_min(self, scores):
 		vals = []
 		for item in scores:
-			vals.append(item[1])
+			vals.append(int(item[1]))
 		if len(vals) == 0:
 			return 0
 		else:
