@@ -9,9 +9,11 @@ def main():
     pygame.init()
     clock = pygame.time.Clock()
     gaming = True
-
+    speed = 9
+    threshold = 4
+    accum = 0
     while gaming:
-        clock.tick(12)
+        clock.tick(speed)
 
         if (board.state is board.Game_state.MENU):
             for event in pygame.event.get():
@@ -60,13 +62,17 @@ def main():
                 board.snake_obj.grow()
                 board.food_obj.update_pos(board.snake_obj)
                 board.score_obj.update()
+                accum += 1
+                if (accum >= threshold):
+                    accum = 0
+                    speed += 1
 
             elif (not board.snake_obj.alive):
                 board.state = board.Game_state.GAMEOVER_SCREEN
        
         elif (board.state is board.Game_state.GAMEOVER_SCREEN):
             events = pygame.event.get()
-
+            speed = 9
             # Process keyboard presses
             board.save_highscore = board.text_input.update(events)
             # Process mouse input 
