@@ -42,13 +42,17 @@ class High_Score:
 	# Returns a list of dictionary of high scores
 	# Format -> [{<username>:<high score>}]
 	def get_high_scores(self):
-		file = open('scores.txt', 'r')
-		content = file.readlines()
 		hs = []
-		for line in content:
-			score = line.split(' ')
-			if len(score) > 1:
-				hs.append((score[0], int(score[1].rstrip())))
+		try:
+			file = open('scores.txt', 'r')
+			content = file.readlines()
+			for line in content:
+				score = line.split(' ')
+				if len(score) > 1:
+					hs.append((score[0], int(score[1].rstrip())))
+		except FileNotFoundError:
+			file = open('scores.txt', 'x')
+
 		file.close()
 		return hs
 
