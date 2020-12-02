@@ -88,7 +88,20 @@ def main():
 
         elif (board.state is board.Game_state.HIGHSCORE_SCREEN):
             # go back to main menu since highscore menu is not implemented
-            board.state = board.Game_state.MENU
+            #board.state = board.Game_state.MENU
+            events = pygame.event.get()
+            for event in events:
+
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse = pygame.mouse.get_pos()
+
+                    # BACK TO MENU
+                    if mouse[0] >= CENTER_X-75 and mouse[0] <= CENTER_X+75 and mouse[1] >= CENTER_Y + 250 and mouse[1] <= CENTER_Y + 280:
+                        board.state = board.Game_state.MENU
 
         # Render changes
         board.draw_all()

@@ -16,6 +16,7 @@ screen = pygame.display.set_mode(size)
 snake_obj = snake.Snake()
 food_obj = food.Food(snake_obj)
 score_obj = score.Score()
+hscore_obj = high_score.High_Score()
 text_input = pygame_textinput.TextInput(text_color=RED, font_size=30, 
                                        max_string_length=7, antialias=True,
                                        repeat_keys_initial_ms=400,
@@ -168,6 +169,58 @@ def game_over():
     offset_from_center = img.get_rect().width/2
     render_item(CENTER_X - offset_from_center, CENTER_Y - 40, img)
 
+# Displays High Scores
+def display_highscores():
+    global text_input
+    # Black out screen
+    pygame.draw.rect(screen, BLACK, [320,40,640,640])
+
+    # Draw High Scores
+    txt = pygame.font.SysFont('Comic Sans MS', 45)
+    img = txt.render('HIGH SCORES', True, LIME)
+    offset_from_center = img.get_rect().width/2
+    render_item(CENTER_X - offset_from_center, CENTER_Y + 300, img)
+
+    # Draw MENU button
+    pygame.draw.rect(screen, GRAY, [CENTER_X-75,CENTER_Y + 250,150,30]) # x, y, width(x), height(y)
+
+
+    # Decide whether buttons are lighted up or not
+    mposx, mposy = pygame.mouse.get_pos()
+    if (mposx >= CENTER_X-75 and mposx <= CENTER_X+75 and mposy >= CENTER_Y + 250 and mposy <= CENTER_Y + 280):
+        pygame.draw.rect(screen, LIGHTGRAY, [CENTER_X-75,CENTER_Y + 250,150,30])  # x, y, width(x), height(y)
+
+
+    # Draw MENU button text
+    txt = pygame.font.SysFont('Comic Sans MS', 20)
+    img = txt.render('BACK', True, WHITE)
+    offset_from_center = img.get_rect().width/2
+    render_item(CENTER_X - offset_from_center, CENTER_Y - 250, img)
+
+    hscores = hscore_obj.get_high_scores()
+    list_pos = 0
+    first = True
+    for name, score in hscores:
+        if first:
+            name_txt = pygame.font.SysFont('Comic Sans MS', 50)
+            name_img = name_txt.render(name, True, TEAL)
+            score_txt = pygame.font.SysFont('Comic Sans MS', 50)
+            score_img = score_txt.render(score, True, TEAL)
+            first = False
+        else:
+            name_txt = pygame.font.SysFont('Comic Sans MS', 40)
+            name_img = name_txt.render(name, True, SILVER)
+            score_txt = pygame.font.SysFont('Comic Sans MS', 40)
+            score_img = score_txt.render(score, True, SILVER)
+
+        render_item(CENTER_X - 150, CENTER_Y + 200 + list_pos, name_img)
+        render_item(CENTER_X + 100, CENTER_Y + 200 + list_pos, score_img)
+
+        # This increment will position the next line accordingly
+        list_pos -= 60
+
+
+
 
 # Renders the given item into the board.
 def render_item(x, y, item):
@@ -248,7 +301,7 @@ def draw_all():
     elif (state is Game_state.GAMEOVER_SCREEN):
         game_over()
     elif (state is Game_state.HIGHSCORE_SCREEN):
-        #  Do stuff related to highscore
+        display_highscores()
         return
     
     
